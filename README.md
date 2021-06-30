@@ -19,6 +19,30 @@ $ npm run generate
 
 For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
 
+## deploy setup
+You shall change two variables to deploy this app.
+- nuxt.config.js
+- ~/plugins/globals.js
+
+### Example1: deploy to github-pages
+Because the public url would be <username>.github.io/<reponame>, it's required to change `router.base`.
+
+When you changed the `router.base`, there must be tricks to use `/static` files. (Though files in the static directory redirected to root path by default, when base changed, the redirection doesn't work automatically.)
+
+#### `nuxt.config.js`
+```javascript
+const basePath = '<reponame>'
+```
+
+#### `~/plugins/globals.js`
+```javascript
+export default ({ app }, inject) => {
+  inject('basePath', ()=>{
+    return '<reponame>'
+  })
+}
+```
+
 ## Special Directories
 
 You can create the following extra directories, some of which have special behaviors. Only `pages` is required; you can delete them if you don't want to use their functionality.
