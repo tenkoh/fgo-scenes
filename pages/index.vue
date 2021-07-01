@@ -65,8 +65,8 @@
 </template>
 
 <script>
-const defaultAction = '幸福に'
-const defaultTarget = '村正ぁ'
+const defaultAction = ''
+const defaultTarget = ''
 export default {
   data() {
     return {
