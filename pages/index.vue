@@ -11,7 +11,7 @@
         </v-row>
         <v-row justify="center" align="center">
           <v-col cols="12" md="6">
-            <v-img :src="original" alt="オリジナル村正ぁ"></v-img>
+            <v-img :lazy-src="original" :src="original" alt="オリジナル村正ぁ"></v-img>
           </v-col>
           <v-col cols="12" md="6">
             <v-form>
@@ -54,13 +54,9 @@
             </v-form>
           </v-col>
         </v-row>
-        <v-row v-show="generated" ref="output-area">
+        <v-row>
           <v-col cols="12">
-            <v-card flat>
-              <v-card-title class="text-center text-h4">受け取れ村正ぁ！</v-card-title>
-              <!-- <v-img :src="original"></v-img> -->
-              <TextImage></TextImage>
-            </v-card>
+            <LazyTextImage v-show="generated"></LazyTextImage>
           </v-col>
         </v-row>
       </v-container>
