@@ -80,7 +80,7 @@
 <script>
 const defaultClaim = '今ぐらい幸福にさせろ'
 const defaultWho = '村正ぁ'
-const apiUrl = 'http://localhost:3000/muramasala'
+const apiUrl = 'https://2beswjj1xl.execute-api.ap-northeast-1.amazonaws.com/Prod/muramasala'
 export default {
   data() {
     return {
