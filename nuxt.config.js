@@ -109,5 +109,9 @@ export default {
 
   router: {
     base: basePath
+  },
+
+  server: {
+    port: 8000
   }
 }

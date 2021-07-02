@@ -5,9 +5,9 @@
         <Nuxt />
       </v-container>
     </v-main>
-    <v-footer absolute app>
+    <v-footer absolute app color="#f5f5f5">
       <v-spacer></v-spacer>
-      <span>&copy; {{ new Date().getFullYear() }} Foxtail88</span>
+      <span>by Foxtail88. Best respect to TYPE-MOON.</span>
       <v-spacer></v-spacer>
     </v-footer>
   </v-app>

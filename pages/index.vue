@@ -1,6 +1,9 @@
 <template>
   <v-row class="mt-3" justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
+    <v-col cols="12" sm="8">
+      <v-overlay :value="processing">
+        <v-progress-circular indeterminate size="64"></v-progress-circular>
+      </v-overlay>
       <v-container>
         <v-row>
           <v-spacer></v-spacer>
@@ -11,39 +14,49 @@
         </v-row>
         <v-row justify="center" align="center">
           <v-col cols="12" md="6">
-            <v-img :lazy-src="original" :src="original" alt="オリジナル村正ぁ"></v-img>
+            <v-img
+              :lazy-src="original"
+              :src="original"
+              alt="オリジナル村正ぁ"
+            ></v-img>
           </v-col>
           <v-col cols="12" md="6">
             <v-form>
               <v-container>
-                <v-row dense>
+                <v-row>
                   <v-text-field
-                    v-model="action"
-                    label="いまぐらい○○させろよぅ、"
-                    required
+                    v-model="claim"
+                    :rules="[rules.required]"
+                    label="○○○○○よぅ、"
+                    clearable
+                    counter
+                    maxlength="20"
                   ></v-text-field>
                 </v-row>
-                <v-row dense>
+                <v-row>
                   <v-text-field
-                    v-model="target"
+                    v-model="who"
+                    :rules="[rules.required]"
                     label="そういうところだぞ○○ーーーー！"
-                    required
+                    clearable
+                    counter
+                    maxlength="10"
                   ></v-text-field>
                 </v-row>
-                <v-row dense>
+                <v-row>
                   <v-col cols="12">
                     <v-card flat>
                       <v-card-actions>
                         <v-row justify="center">
                           <v-btn
                             class="ml-2 mr-2"
-                            color="indigo"
+                            :color="(disableGenerate ? 'grey' : 'indigo')"
                             dark
-                            @click="generate_img"
+                            @click="process"
                             >Generate</v-btn
                           >
-                          <v-btn class="ml-2 mr-2" @click="clear_img"
-                            >clear</v-btn
+                          <v-btn class="ml-2 mr-2" @click="reset_img"
+                            >reset</v-btn
                           >
                         </v-row>
                       </v-card-actions>
@@ -56,7 +69,7 @@
         </v-row>
         <v-row>
           <v-col cols="12">
-            <LazyTextImage v-show="generated"></LazyTextImage>
+            <LazyTextImage v-show="completed" :encoded="idata"></LazyTextImage>
           </v-col>
         </v-row>
       </v-container>
@@ -65,32 +78,76 @@
 </template>
 
 <script>
-const defaultAction = ''
-const defaultTarget = ''
+const defaultClaim = '今ぐらい幸福にさせろ'
+const defaultWho = '村正ぁ'
+const apiUrl = 'http://localhost:3000/muramasala'
 export default {
   data() {
     return {
-      action: defaultAction,
-      target: defaultTarget,
+      claim: defaultClaim,
+      who: defaultWho,
       original: this.$basePath() + 'original.png',
-      generated: false,
+      idata: '',
+      completed: false,
+      processing: false,
+      rules: {
+        required: (value) => !!value || '必ず入力して下さい',
+      },
     }
   },
-  methods: {
-    generate_img() {
-      this.generated = true
-      // scroll after dom had refreshed
-      this.$nextTick(this.scrollToBottom)
+  computed: {
+    disableGenerate() {
+      const invalidClaim = this.claim === null || this.claim === ''
+      const invalidWho = this.who === null || this.who === ''
+      const invalidInputs = invalidClaim || invalidWho
+      return invalidInputs || this.processing
     },
-    clear_img() {
-      this.action = defaultAction
-      this.target = defaultTarget
-      this.generated = false
-      this.$nextTick(()=>{
+  },
+  methods: {
+    async process() {
+      if(this.disableGenerate){
+        window.alert('入力に不足があります')
+        return
+      }
+
+      this.processing = true
+      const img = await this.get_img_base64()
+      this.processing = false
+      if (img !== '') {
+        this.completed = true
+        // scroll after dom had refreshed
+        this.$nextTick(this.scrollToBottom)
+      }
+    },
+    async get_img_base64() {
+      try {
+        const resp = await fetch(apiUrl, {
+          method: 'POST',
+          body: JSON.stringify({
+            claim: this.claim,
+            who: this.who,
+          }),
+          headers: { 'Content-Type': 'application/json' },
+        })
+        const json = await resp.json()
+        const img = json.image
+        this.idata = img
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e)
+        this.idata = ''
+      }
+    },
+    reset_img() {
+      this.claim = defaultClaim
+      this.who = defaultWho
+      this.idata = ''
+      this.completed = false
+      this.$nextTick(() => {
         window.scroll({
           top: 0,
           left: 0,
-          behavior: 'smooth'
+          behavior: 'smooth',
         })
       })
     },
@@ -100,7 +157,7 @@ export default {
       window.scroll({
         top: bottom,
         left: 0,
-        behavior: 'smooth'
+        behavior: 'smooth',
       })
     },
   },
