@@ -6,16 +6,40 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - fgo-scenes',
-    title: 'fgo-scenes',
+    title: 'FGO:村正ぁジェネレータ',
     htmlAttrs: {
+      prefix: 'og: http://ogp.me/ns#',
       lang: 'ja'
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: 'Fate/Grand Order 二部六章名場面「そういうところだぞ村正ぁーーーー！」のパロディ画像ジェネレータです。さぁ、皆さんご一緒に！ ＼村正ぁ！／' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { name: 'format-detection', content: 'telephone=no' },
+      { hid: 'og:site_name', property: 'og:site_name', content: 'FGO:村正ぁジェネレータ' },
+      { hid: 'og:type', property: 'og:type', content: 'website' },
+      {
+        hid: 'og:url',
+        property: 'og:url',
+        content: 'https://tenkoh.github.io/fgo-scenes',
+      },
+      { hid: 'og:title', property: 'og:title', content: 'FGO:村正ぁジェネレータ' },
+      {
+        hid: 'og:description',
+        property: 'og:description',
+        content:
+          'Fate/Grand Order 二部六章名場面「そういうところだぞ村正ぁーーーー！」のパロディ画像ジェネレータです。さぁ、皆さんご一緒に！ ＼村正ぁ！／',
+      },
+      {
+        hid: 'og:image',
+        property: 'og:image',
+        content: 'https://tenkoh.github.io/fgo-scenes/ogp.png',
+      },
+      {
+        name: 'twitter:card',
+        content: 'summary_large_image',
+      },
+      { name: 'twitter:site', content: '@FGO-scenes' },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: basePath + 'favicon.ico' }
@@ -47,7 +71,13 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/google-gtag',
   ],
+
+  'google-gtag': {
+    id: 'G-T9EHVMH1TP',
+    debug: true,
+  },
 
   purgeCSS: {
     enabled: process.env.NODE_ENV === 'production',
